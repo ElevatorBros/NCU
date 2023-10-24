@@ -43,7 +43,6 @@ void curses_line(int start_y, int start_x, int stop_y, int stop_x,
     if (start_y == stop_y && start_x == stop_x)
       break;
     int e2 = 2 * error;
-    printf("(%d, %d) error: %d\n", start_y, start_x, error);
     if (e2 >= dy) {
       if (start_x != stop_x) {
         error = error + dy;
