@@ -2,9 +2,12 @@
 
 #define absolute(x) ((x) < 0 ? -(x) : x)
 
+int curses_screen_width = 0;
+int curses_screen_height = 0;
+
 /* Initialize ncurses with sane defaults
  */
-void curses_init() {
+void curses_init(int width, int height) {
   /* Init curses */
   initscr();
   /* Disable buffering and get one character-at-a-time input */
@@ -15,6 +18,10 @@ void curses_init() {
   noecho();
   /* Hide cursor */
   curs_set(0);
+
+  /* Set globals */
+  curses_screen_width = width;
+  curses_screen_height = height;
 }
 
 /*
@@ -29,6 +36,8 @@ int curses_input() { return getch(); }
 /* Clear the screen
  */
 void curses_clear() { erase(); }
+
+void curses_point(int y, int x, char toPrint) { mvprintw(y, x, "%c", toPrint); }
 
 void curses_line(int start_y, int start_x, int stop_y, int stop_x,
                  char toPrint) {
@@ -56,4 +65,18 @@ void curses_line(int start_y, int start_x, int stop_y, int stop_x,
       }
     }
   }
+}
+
+void curses_border() {
+  curses_line(0, 0, curses_screen_height, 0, '|');
+  curses_line(0, 0, 0, curses_screen_width, '-');
+  curses_line(0, curses_screen_width, curses_screen_height, curses_screen_width,
+              '|');
+  curses_line(curses_screen_height, 0, curses_screen_height,
+              curses_screen_width, '-');
+
+  curses_point(0, 0, '+');
+  curses_point(0, curses_screen_height, '+');
+  curses_point(curses_screen_width, 0, '+');
+  curses_point(curses_screen_width, curses_screen_height, '+');
 }
