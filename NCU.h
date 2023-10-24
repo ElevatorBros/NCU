@@ -5,6 +5,10 @@
 int curses_screen_width = 0;
 int curses_screen_height = 0;
 
+char curses_horizontal_char = '-';
+char curses_vertical_char = '|';
+char curses_corner_char = '+';
+
 /* Initialize ncurses with sane defaults
  */
 void curses_init(int width, int height) {
@@ -37,10 +41,12 @@ int curses_input() { return getch(); }
  */
 void curses_clear() { erase(); }
 
-void curses_point(int y, int x, char toPrint) { mvprintw(y, x, "%c", toPrint); }
+void curses_point(int y, int x, char to_print) {
+  mvprintw(y, x, "%c", to_print);
+}
 
 void curses_line(int start_y, int start_x, int stop_y, int stop_x,
-                 char toPrint) {
+                 char to_print) {
   int dx = absolute(stop_x - start_x);
   int sx = start_x < stop_x ? 1 : -1;
   int dy = -absolute(stop_y - start_y);
@@ -48,7 +54,7 @@ void curses_line(int start_y, int start_x, int stop_y, int stop_x,
   int error = dx + dy;
 
   while (1) {
-    mvprintw(start_y, start_x, "%c", toPrint);
+    mvprintw(start_y, start_x, "%c", to_print);
     if (start_y == stop_y && start_x == stop_x)
       break;
     int e2 = 2 * error;
@@ -67,16 +73,23 @@ void curses_line(int start_y, int start_x, int stop_y, int stop_x,
   }
 }
 
-void curses_border() {
-  curses_line(0, 0, curses_screen_height, 0, '|');
-  curses_line(0, 0, 0, curses_screen_width, '-');
-  curses_line(0, curses_screen_width, curses_screen_height, curses_screen_width,
-              '|');
-  curses_line(curses_screen_height, 0, curses_screen_height,
-              curses_screen_width, '-');
+void curses_box(int top_left_y, int top_left_x, int bottom_right_y,
+                int bottom_right_x) {
+  curses_line(top_left_y, top_left_x, top_left_y, bottom_right_x,
+              curses_horizontal_char);
+  curses_line(top_left_y, top_left_x, bottom_right_y, top_left_x,
+              curses_vertical_char);
+  curses_line(bottom_right_y, top_left_x, bottom_right_y, bottom_right_x,
+              curses_horizontal_char);
+  curses_line(top_left_y, bottom_right_x, bottom_right_y, bottom_right_x,
+              curses_vertical_char);
 
-  curses_point(0, 0, '+');
-  curses_point(curses_screen_height, 0, '+');
-  curses_point(0, curses_screen_width, '+');
-  curses_point(curses_screen_height, curses_screen_width, '+');
+  curses_point(top_left_y, top_left_x, curses_corner_char);
+  curses_point(bottom_right_y, top_left_x, curses_corner_char);
+  curses_point(top_left_y, bottom_right_x, curses_corner_char);
+  curses_point(bottom_right_y, bottom_right_x, curses_corner_char);
+}
+
+void curses_border() {
+  curses_box(0, 0, curses_screen_height, curses_screen_width);
 }
