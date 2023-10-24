@@ -76,7 +76,7 @@ void curses_border() {
               curses_screen_width, '-');
 
   curses_point(0, 0, '+');
-  curses_point(0, curses_screen_height, '+');
-  curses_point(curses_screen_width, 0, '+');
-  curses_point(curses_screen_width, curses_screen_height, '+');
+  curses_point(curses_screen_height, 0, '+');
+  curses_point(0, curses_screen_width, '+');
+  curses_point(curses_screen_height, curses_screen_width, '+');
 }
