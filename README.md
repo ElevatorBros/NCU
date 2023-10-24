@@ -1,0 +1,1 @@
+Ncurses utility header file
