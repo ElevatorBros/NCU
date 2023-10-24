@@ -1,6 +1,6 @@
 #include <ncurses.h>
 
-#define abs(x) ((x) < 0 ? -(x) : x)
+#define absolute(x) ((x) < 0 ? -(x) : x)
 
 /* Initialize ncurses with sane defaults
  */
@@ -32,9 +32,9 @@ void curses_clear() { erase(); }
 
 void curses_line(int start_y, int start_x, int stop_y, int stop_x,
                  char toPrint) {
-  int dx = abs(stop_x - start_x);
+  int dx = absolute(stop_x - start_x);
   int sx = start_x < stop_x ? 1 : -1;
-  int dy = -abs(stop_y - start_y);
+  int dy = -absolute(stop_y - start_y);
   int sy = start_y < stop_y ? 1 : -1;
   int error = dx + dy;
 
